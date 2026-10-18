@@ -18,16 +18,15 @@
     --text:#e2e8f0;
     --muted:#94a3b8;
     --border:rgba(148,163,184,.15);
-    --border-strong:rgba(148,163,184,.25);
     --ok:#22c55e;
     --bad:#ef4444;
     --w1:#38bdf8;
     --w2:#a855f7;
+    --today:#fbbf24;
     --shadow:0 8px 32px rgba(0,0,0,.4);
     --radius:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
   body{
     font-family:'Inter',system-ui,sans-serif;
     background:var(--bg-1);
@@ -46,48 +45,30 @@
   /* ===== HEADER ===== */
   header{
     display:flex;justify-content:space-between;align-items:center;
-    flex-wrap:wrap;gap:16px;margin-bottom:28px;
-    padding-bottom:20px;
-    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;gap:16px;margin-bottom:24px;
+    padding-bottom:20px;border-bottom:1px solid var(--border);
   }
-  h1{
-    font-size:1.75rem;font-weight:800;letter-spacing:-.02em;
-    display:flex;align-items:center;gap:10px;
-  }
+  h1{font-size:1.75rem;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
   h1 .emoji{
     display:inline-flex;align-items:center;justify-content:center;
     width:44px;height:44px;border-radius:12px;
     background:linear-gradient(135deg,rgba(56,189,248,.2),rgba(168,85,247,.2));
-    border:1px solid rgba(56,189,248,.3);
-    font-size:1.4rem;
+    border:1px solid rgba(56,189,248,.3);font-size:1.4rem;
   }
   h1 .gradient{
     background:linear-gradient(135deg,#38bdf8 0%,#a855f7 100%);
-    -webkit-background-clip:text;
-    background-clip:text;
-    -webkit-text-fill-color:transparent;
-    color:transparent;
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
   }
   .status{
     display:inline-flex;align-items:center;gap:8px;
     padding:8px 14px;border-radius:999px;
-    background:rgba(30,41,59,.6);
-    border:1px solid var(--border);
-    font-size:.8rem;color:var(--muted);
-    backdrop-filter:blur(10px);
-    transition:.3s;
+    background:rgba(30,41,59,.6);border:1px solid var(--border);
+    font-size:.8rem;color:var(--muted);backdrop-filter:blur(10px);
   }
-  .status .dot{
-    width:8px;height:8px;border-radius:50%;
-    background:var(--muted);
-    transition:.3s;
-  }
+  .status .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.3s}
   .status.online{border-color:rgba(34,197,94,.3);color:#86efac}
-  .status.online .dot{
-    background:var(--ok);
-    box-shadow:0 0 0 0 rgba(34,197,94,.6);
-    animation:pulse 2s infinite;
-  }
+  .status.online .dot{background:var(--ok);animation:pulse 2s infinite}
   .status.error{border-color:rgba(239,68,68,.3);color:#fca5a5}
   .status.error .dot{background:var(--bad)}
   @keyframes pulse{
@@ -97,76 +78,145 @@
   }
 
   /* ===== TOOLBAR ===== */
-  .toolbar{
-    display:grid;
-    grid-template-columns:2fr 1fr 1fr auto;
-    gap:10px;
-    margin-bottom:20px;
-  }
+  .toolbar{display:grid;grid-template-columns:2fr 1fr 1fr auto auto;gap:10px;margin-bottom:16px}
   .search-wrap,.select-wrap{position:relative;display:flex;align-items:center}
-  .search-wrap .icon,.select-wrap .icon{
-    position:absolute;left:14px;color:var(--muted);font-size:.95rem;pointer-events:none;
-    transition:.2s;
-  }
+  .search-wrap .icon,.select-wrap .icon{position:absolute;left:14px;color:var(--muted);font-size:.95rem;pointer-events:none}
   .toolbar input,.toolbar select{
-    width:100%;
-    background:var(--card);
-    border:1px solid var(--border);
-    color:var(--text);
-    padding:12px 16px 12px 42px;
-    border-radius:12px;
-    font-size:.9rem;
-    font-family:inherit;
-    outline:none;
-    backdrop-filter:blur(10px);
-    transition:.2s;
-    appearance:none;
-    cursor:pointer;
+    width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);
+    padding:12px 16px 12px 42px;border-radius:12px;font-size:.9rem;font-family:inherit;
+    outline:none;backdrop-filter:blur(10px);transition:.2s;appearance:none;cursor:pointer;
   }
   .toolbar input{cursor:text}
   .toolbar input::placeholder{color:var(--muted)}
   .toolbar input:focus,.toolbar select:focus{
-    border-color:var(--accent);
-    background:rgba(30,41,59,.9);
+    border-color:var(--accent);background:rgba(30,41,59,.9);
     box-shadow:0 0 0 4px rgba(56,189,248,.1);
   }
-  .toolbar input:focus + .icon,
-  .search-wrap:focus-within .icon{color:var(--accent)}
-  .select-wrap::after{
-    content:'▾';position:absolute;right:16px;color:var(--muted);
-    pointer-events:none;font-size:.75rem;
-  }
+  .select-wrap::after{content:'▾';position:absolute;right:16px;color:var(--muted);pointer-events:none;font-size:.75rem}
   .toolbar button{
     display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    background:linear-gradient(135deg,#38bdf8,#a855f7);
-    color:#0a0e1a;border:none;
-    padding:12px 20px;border-radius:12px;
-    font-weight:700;font-size:.88rem;
-    cursor:pointer;font-family:inherit;
-    box-shadow:0 4px 16px rgba(56,189,248,.3);
-    transition:.25s;
-    white-space:nowrap;
+    background:linear-gradient(135deg,#38bdf8,#a855f7);color:#0a0e1a;border:none;
+    padding:12px 20px;border-radius:12px;font-weight:700;font-size:.88rem;
+    cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(56,189,248,.3);
+    transition:.25s;white-space:nowrap;
   }
-  .toolbar button:hover{
-    transform:translateY(-2px);
-    box-shadow:0 6px 24px rgba(56,189,248,.5);
+  .toolbar button:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(56,189,248,.5)}
+  .toolbar button.secondary{
+    background:var(--card);color:var(--accent);border:1px solid var(--border);
+    box-shadow:none;
   }
-  .toolbar button:active{transform:translateY(0)}
+  .toolbar button.secondary:hover{
+    border-color:var(--accent);background:rgba(56,189,248,.1);
+    box-shadow:none;
+  }
+  .toolbar button.today-btn{
+    background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0a0e1a;
+  }
+  .toolbar button.today-btn:hover{box-shadow:0 6px 24px rgba(251,191,36,.5)}
   .toolbar button.loading{opacity:.6;pointer-events:none}
   .toolbar button.loading .icon{animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
 
+  /* ===== VIEW TABS ===== */
+  .view-tabs{
+    display:inline-flex;background:var(--card);border:1px solid var(--border);
+    border-radius:12px;padding:4px;margin-bottom:20px;backdrop-filter:blur(10px);
+  }
+  .view-tabs button{
+    background:none;border:none;color:var(--muted);padding:9px 18px;
+    border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:600;
+    cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px;
+  }
+  .view-tabs button.active{background:rgba(56,189,248,.15);color:var(--accent)}
+  .view-tabs button:hover:not(.active){color:var(--text)}
+
+  /* ===== CALENDAR ===== */
+  .calendar{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:20px;margin-bottom:24px;
+    backdrop-filter:blur(16px);box-shadow:var(--shadow);
+    display:none;
+  }
+  .calendar.show{display:block;animation:fadeInUp .4s ease-out}
+  .cal-header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:16px;flex-wrap:wrap;gap:10px;
+  }
+  .cal-title{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:8px}
+  .cal-nav{display:flex;gap:8px}
+  .cal-nav button{
+    background:rgba(15,23,42,.6);border:1px solid var(--border);
+    color:var(--accent);width:36px;height:36px;border-radius:8px;
+    cursor:pointer;font-size:1rem;font-family:inherit;
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:.2s;
+  }
+  .cal-nav button:hover{border-color:var(--accent);background:rgba(56,189,248,.1)}
+  .cal-grid{
+    display:grid;grid-template-columns:repeat(7,1fr);gap:6px;
+  }
+  .cal-dow{
+    text-align:center;font-size:.72rem;font-weight:600;
+    color:var(--muted);text-transform:uppercase;letter-spacing:.8px;
+    padding:8px 0;
+  }
+  .cal-day{
+    aspect-ratio:1;min-height:76px;
+    background:rgba(15,23,42,.4);
+    border:1px solid var(--border);border-radius:10px;
+    padding:6px;cursor:pointer;transition:.2s;
+    display:flex;flex-direction:column;gap:3px;
+    position:relative;overflow:hidden;
+  }
+  .cal-day:hover:not(.empty){
+    border-color:var(--accent);
+    background:rgba(56,189,248,.08);
+    transform:translateY(-2px);
+  }
+  .cal-day.empty{
+    background:transparent;border-color:transparent;cursor:default;
+  }
+  .cal-day.has-data{border-color:rgba(56,189,248,.25)}
+  .cal-day.today{
+    border-color:var(--today);
+    background:rgba(251,191,36,.1);
+    box-shadow:0 0 0 2px rgba(251,191,36,.2);
+  }
+  .cal-day.selected{
+    border-color:var(--accent);
+    background:rgba(56,189,248,.15);
+    box-shadow:0 0 0 2px rgba(56,189,248,.4);
+  }
+  .cal-day .num{
+    font-size:.85rem;font-weight:700;color:var(--text);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .cal-day.today .num{color:var(--today)}
+  .cal-day .today-tag{
+    font-size:.6rem;font-weight:700;text-transform:uppercase;
+    background:var(--today);color:#0a0e1a;padding:1px 5px;border-radius:4px;
+    letter-spacing:.3px;
+  }
+  .cal-day .badges{display:flex;flex-direction:column;gap:2px;margin-top:auto}
+  .cal-day .mini-badge{
+    font-size:.62rem;font-weight:600;padding:1px 5px;border-radius:4px;
+    display:inline-block;line-height:1.3;
+  }
+  .cal-day .mini-badge.w1{background:rgba(56,189,248,.2);color:var(--w1)}
+  .cal-day .mini-badge.w2{background:rgba(168,85,247,.2);color:var(--w2)}
+  .cal-legend{
+    display:flex;gap:16px;margin-top:14px;font-size:.75rem;
+    color:var(--muted);flex-wrap:wrap;
+  }
+  .cal-legend span{display:inline-flex;align-items:center;gap:5px}
+  .cal-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
   /* ===== RESULT PANEL ===== */
   .result-panel{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    padding:20px;
-    margin-bottom:24px;
-    backdrop-filter:blur(16px);
-    box-shadow:var(--shadow);
-    position:relative;
-    overflow:hidden;
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:20px;margin-bottom:24px;
+    backdrop-filter:blur(16px);box-shadow:var(--shadow);
+    position:relative;overflow:hidden;
   }
   .result-panel::before{
     content:'';position:absolute;top:0;left:0;right:0;height:2px;
@@ -176,120 +226,81 @@
     font-size:1rem;font-weight:700;margin-bottom:16px;
     display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
   }
-  .result-panel h2 .label{display:flex;align-items:center;gap:8px}
   .result-actions{display:flex;gap:8px}
   .result-actions button{
     display:inline-flex;align-items:center;gap:5px;
     background:rgba(15,23,42,.6);color:var(--accent);
-    border:1px solid var(--border);
-    padding:7px 14px;border-radius:8px;
-    font-size:.8rem;cursor:pointer;font-weight:600;font-family:inherit;
-    transition:.2s;
+    border:1px solid var(--border);padding:7px 14px;border-radius:8px;
+    font-size:.8rem;cursor:pointer;font-weight:600;font-family:inherit;transition:.2s;
   }
   .result-actions button:hover{
-    border-color:var(--accent);
-    background:rgba(56,189,248,.1);
-    transform:translateY(-1px);
+    border-color:var(--accent);background:rgba(56,189,248,.1);transform:translateY(-1px);
   }
   .result-actions button.copied{
     background:rgba(34,197,94,.15);color:#86efac;border-color:rgba(34,197,94,.4);
   }
-
   textarea#resultText{
-    width:100%;min-height:300px;
-    background:rgba(10,14,26,.8);
-    color:#cbd5e1;
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:16px;
-    font-family:'JetBrains Mono','Consolas',monospace;
-    font-size:.82rem;
-    line-height:1.7;
-    resize:vertical;
-    outline:none;
-    transition:.2s;
+    width:100%;min-height:300px;background:rgba(10,14,26,.8);color:#cbd5e1;
+    border:1px solid var(--border);border-radius:12px;padding:16px;
+    font-family:'JetBrains Mono','Consolas',monospace;font-size:.82rem;
+    line-height:1.7;resize:vertical;outline:none;transition:.2s;
   }
-  textarea#resultText:focus{
-    border-color:var(--accent);
-    box-shadow:0 0 0 4px rgba(56,189,248,.08);
-  }
+  textarea#resultText:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(56,189,248,.08)}
   textarea#resultText::placeholder{color:var(--muted);font-family:'Inter',sans-serif}
 
-  /* ===== COUNT INFO ===== */
   .count-info{
-    font-size:.82rem;color:var(--muted);
-    margin-bottom:12px;padding:0 4px;
+    font-size:.82rem;color:var(--muted);margin-bottom:12px;
     display:flex;align-items:center;gap:8px;
   }
   .count-info::before{
-    content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
-    background:var(--accent);
+    content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);
+  }
+  .count-info .today-hint{
+    background:rgba(251,191,36,.15);color:var(--today);
+    padding:2px 8px;border-radius:6px;font-weight:600;font-size:.75rem;
   }
 
   /* ===== TABLE ===== */
   .table-wrap{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    overflow:hidden;
-    backdrop-filter:blur(16px);
-    box-shadow:var(--shadow);
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);overflow:hidden;
+    backdrop-filter:blur(16px);box-shadow:var(--shadow);
   }
   table{width:100%;border-collapse:collapse;font-size:.88rem}
-  thead{
-    background:rgba(10,14,26,.7);
-    position:sticky;top:0;
-    backdrop-filter:blur(10px);
-  }
+  thead{background:rgba(10,14,26,.7);position:sticky;top:0;backdrop-filter:blur(10px)}
   th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
-  th{
-    font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;
-    color:var(--muted);font-weight:600;
-  }
+  th{font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:600}
   tbody tr{transition:.15s}
   tbody tr:hover{background:rgba(56,189,248,.05)}
   tbody tr:last-child td{border-bottom:none}
-
+  tbody tr.is-today{
+    background:rgba(251,191,36,.06);
+    border-left:3px solid var(--today);
+  }
+  tbody tr.is-today:hover{background:rgba(251,191,36,.1)}
   .badge{
     display:inline-flex;align-items:center;gap:5px;
-    padding:4px 12px;border-radius:999px;
-    font-size:.75rem;font-weight:600;
+    padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:600;
     border:1px solid transparent;
   }
-  .badge.w1{
-    background:rgba(56,189,248,.12);color:var(--w1);
-    border-color:rgba(56,189,248,.25);
-  }
-  .badge.w2{
-    background:rgba(168,85,247,.12);color:var(--w2);
-    border-color:rgba(168,85,247,.25);
-  }
-  .badge.default{
-    background:rgba(148,163,184,.1);color:var(--muted);
-    border-color:rgba(148,163,184,.2);
+  .badge.w1{background:rgba(56,189,248,.12);color:var(--w1);border-color:rgba(56,189,248,.25)}
+  .badge.w2{background:rgba(168,85,247,.12);color:var(--w2);border-color:rgba(168,85,247,.25)}
+  .badge.default{background:rgba(148,163,184,.1);color:var(--muted);border-color:rgba(148,163,184,.2)}
+  .today-tag-inline{
+    font-size:.65rem;font-weight:700;text-transform:uppercase;
+    background:var(--today);color:#0a0e1a;padding:1px 6px;border-radius:4px;
+    margin-left:6px;letter-spacing:.3px;
   }
 
-  .empty,.loading{
-    padding:60px 20px;text-align:center;color:var(--muted);
-    font-size:.9rem;
-  }
-  .loading{
-    color:var(--accent);
-    display:flex;flex-direction:column;align-items:center;gap:14px;
-  }
+  .empty,.loading{padding:60px 20px;text-align:center;color:var(--muted);font-size:.9rem}
+  .loading{color:var(--accent);display:flex;flex-direction:column;align-items:center;gap:14px}
   .loading::before{
     content:'';width:32px;height:32px;border-radius:50%;
-    border:3px solid rgba(56,189,248,.15);
-    border-top-color:var(--accent);
+    border:3px solid rgba(56,189,248,.15);border-top-color:var(--accent);
     animation:spin 1s linear infinite;
   }
+  .footer{margin-top:20px;font-size:.75rem;color:var(--muted);text-align:center;padding:12px}
 
-  .footer{
-    margin-top:20px;font-size:.75rem;color:var(--muted);
-    text-align:center;padding:12px;
-  }
-
-  /* ===== ANIMATIONS ===== */
   @keyframes fadeInUp{
     from{opacity:0;transform:translateY(12px)}
     to{opacity:1;transform:translateY(0)}
@@ -297,10 +308,10 @@
   .result-panel,.table-wrap{animation:fadeInUp .5s ease-out}
   .table-wrap{animation-delay:.1s;animation-fill-mode:both}
 
-  /* ===== RESPONSIVE ===== */
   @media(max-width:900px){
     .toolbar{grid-template-columns:1fr 1fr}
-    .toolbar button{grid-column:1/-1}
+    .toolbar button{grid-column:auto}
+    .search-wrap{grid-column:1/-1}
   }
   @media(max-width:640px){
     body{padding:16px}
@@ -311,6 +322,9 @@
     .toolbar{grid-template-columns:1fr}
     .result-panel{padding:16px}
     textarea#resultText{min-height:220px;font-size:.75rem}
+    .cal-day{min-height:60px}
+    .cal-day .num{font-size:.75rem}
+    .cal-day .mini-badge{font-size:.55rem}
   }
 </style>
 </head>
@@ -346,12 +360,38 @@
         <option value="">Semua Tanggal</option>
       </select>
     </div>
+    <button id="todayBtn" class="today-btn"><span class="icon">🔔</span> Hari Ini</button>
     <button id="refreshBtn"><span class="icon">🔄</span> Muat Ulang</button>
   </div>
 
+  <div class="view-tabs">
+    <button id="tabList" class="active">📋 Daftar</button>
+    <button id="tabCalendar">📅 Kalender</button>
+  </div>
+
+  <!-- ===== KALENDER ===== -->
+  <div class="calendar" id="calendar">
+    <div class="cal-header">
+      <div class="cal-title" id="calTitle">📅 Agustus 2026</div>
+      <div class="cal-nav">
+        <button id="calPrev" title="Bulan sebelumnya">‹</button>
+        <button id="calToday" title="Bulan ini" style="width:auto;padding:0 12px;font-size:.8rem;font-weight:600">Hari Ini</button>
+        <button id="calNext" title="Bulan berikutnya">›</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-legend">
+      <span><i style="background:rgba(56,189,248,.6)"></i> W1</span>
+      <span><i style="background:rgba(168,85,247,.6)"></i> W2</span>
+      <span><i style="background:var(--today)"></i> Hari ini</span>
+      <span><i style="background:rgba(56,189,248,.15);border:1px solid var(--accent)"></i> Dipilih</span>
+    </div>
+  </div>
+
+  <!-- ===== RESULT PANEL ===== -->
   <div class="result-panel">
     <h2>
-      <span class="label">📋 Hasil Pencarian / Filter</span>
+      <span>📋 Hasil Pencarian / Filter</span>
       <span class="result-actions">
         <button id="copyBtn">📋 Salin</button>
         <button id="clearBtn">✖ Reset</button>
@@ -393,6 +433,21 @@ const $ = id => document.getElementById(id);
 const PAGE_SIZE = 100;
 let shown = PAGE_SIZE;
 
+// Kalender state
+let calYear, calMonth; // 0-11
+let selectedDate = null; // "YYYY-MM-DD"
+
+// ---- Util tanggal ----
+function todayISO(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+const TODAY_ISO = todayISO();
+
+function isoFromParts(y,m,d){
+  return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+
 function shiftClass(shift){
   const s = (shift||'').toUpperCase();
   if(s === 'W1') return 'w1';
@@ -412,6 +467,7 @@ function cleanPosition(p){
   return String(p).replace(/^\[|\]$/g,'').trim() || '-';
 }
 
+// ===== Render output teks =====
 function renderResultText(){
   const ta = $('resultText');
   if(!filtered.length){ ta.value = ''; return; }
@@ -428,7 +484,8 @@ function renderResultText(){
 
   dateKeys.forEach((dk, di)=>{
     const grp = byDate[dk];
-    lines.push(`📅 BO WL Standby : ${grp.label || dk}`);
+    const isToday = dk === TODAY_ISO ? ' 🔔' : '';
+    lines.push(`📅 BO WL Standby : ${grp.label || dk}${isToday}`);
     lines.push('');
 
     const byShift = {};
@@ -447,7 +504,7 @@ function renderResultText(){
         .forEach(r=>{
           const contact = r.contact || '-';
           const pos = cleanPosition(r.position);
-          const id = r.id || '-';
+          const id  = r.id || '-';
           lines.push(`${r.name || '-'}-${contact}-[${pos}]-${id}`);
         });
       lines.push('────────────────────');
@@ -459,6 +516,7 @@ function renderResultText(){
   ta.value = lines.join('\n');
 }
 
+// ===== Render tabel =====
 function render(){
   const tb = $('tableBody');
   if(!filtered.length){
@@ -469,9 +527,10 @@ function render(){
   const slice = filtered.slice(0, shown);
   tb.innerHTML = slice.map((r,i)=>{
     const cls = shiftClass(r.shift);
-    return `<tr>
+    const isToday = r.date === TODAY_ISO;
+    return `<tr class="${isToday?'is-today':''}">
       <td>${i+1}</td>
-      <td>${formatTanggal(r.dateLabel, r.date)}</td>
+      <td>${formatTanggal(r.dateLabel, r.date)}${isToday?'<span class="today-tag-inline">Hari ini</span>':''}</td>
       <td><strong>${r.name||'-'}</strong></td>
       <td><span class="badge ${cls}">${r.shift||'-'}</span></td>
       <td class="hide-mobile">${r.schedule||'-'}</td>
@@ -480,9 +539,13 @@ function render(){
     </tr>`;
   }).join('');
 
-  $('countInfo').textContent =
-    `Menampilkan ${slice.length} dari ${filtered.length} jadwal` +
-    (filtered.length > shown ? ' — gunakan pencarian/filter untuk mempersempit.' : '');
+  let info = `Menampilkan ${slice.length} dari ${filtered.length} jadwal`;
+  if(filtered.length > shown) info += ' — gunakan pencarian/filter untuk mempersempit.';
+  $('countInfo').innerHTML = info + (hasTodayInFilter() ? ' <span class="today-hint">🔔 Termasuk hari ini</span>' : '');
+}
+
+function hasTodayInFilter(){
+  return filtered.some(r => r.date === TODAY_ISO);
 }
 
 function fillDateFilter(){
@@ -490,27 +553,129 @@ function fillDateFilter(){
   allData.forEach(r=>{ if(r.date) map[r.date] = r.dateLabel || r.date; });
   const dates = Object.keys(map).sort();
   $('filterDate').innerHTML = '<option value="">Semua Tanggal</option>' +
-    dates.map(d=>`<option value="${d}">${map[d]}</option>`).join('');
+    dates.map(d=>{
+      const isToday = d === TODAY_ISO;
+      return `<option value="${d}">${isToday?'🔔 ':(map[d]===d?d:'')}${map[d]}${isToday?' (Hari ini)':''}</option>`;
+    }).join('');
 }
 
 function applyFilters(resetPage=true){
   if(resetPage) shown = PAGE_SIZE;
-  const q = $('search').value.toLowerCase().trim();
+  const q  = $('search').value.toLowerCase().trim();
   const fs = $('filterShift').value.toUpperCase();
   const fd = $('filterDate').value;
 
   filtered = allData.filter(r=>{
     const matchQ = !q || [r.name,r.id,r.position,r.shift,r.schedule,r.dateLabel,r.contact]
-      .some(v=>(v||'').toString().toLowerCase().includes(q));
+      .some(v => (v||'').toString().toLowerCase().includes(q));
     const matchS = !fs || (r.shift||'').toUpperCase() === fs;
     const matchD = !fd || r.date === fd;
     return matchQ && matchS && matchD;
   });
 
+  selectedDate = fd || null;
   render();
   renderResultText();
+  if($('calendar').classList.contains('show')) renderCalendar();
 }
 
+// ===== KALENDER =====
+function buildMonthData(){
+  // map: "YYYY-MM-DD" -> { w1: n, w2: n }
+  const map = {};
+  allData.forEach(r=>{
+    if(!r.date) return;
+    if(!map[r.date]) map[r.date] = { w1:0, w2:0 };
+    const s = (r.shift||'').toUpperCase();
+    if(s === 'W1') map[r.date].w1++;
+    else if(s === 'W2') map[r.date].w2++;
+  });
+  return map;
+}
+
+const MONTH_NAMES = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+function renderCalendar(){
+  const grid = $('calGrid');
+  const monthData = buildMonthData();
+
+  $('calTitle').textContent = `📅 ${MONTH_NAMES[calMonth]} ${calYear}`;
+
+  // Header hari
+  const dows = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+  let html = dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+  const first = new Date(calYear, calMonth, 1);
+  const startDow = (first.getDay() + 6) % 7; // Senin=0
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+
+  // Sel kosong sebelum tanggal 1
+  for(let i=0;i<startDow;i++) html += '<div class="cal-day empty"></div>';
+
+  for(let d=1; d<=daysInMonth; d++){
+    const iso = isoFromParts(calYear, calMonth, d);
+    const data = monthData[iso] || { w1:0, w2:0 };
+    const isToday = iso === TODAY_ISO;
+    const isSelected = iso === selectedDate;
+    const hasData = data.w1 + data.w2 > 0;
+
+    let cls = 'cal-day';
+    if(hasData) cls += ' has-data';
+    if(isToday) cls += ' today';
+    if(isSelected) cls += ' selected';
+
+    let badges = '';
+    if(data.w1) badges += `<span class="mini-badge w1">W1 · ${data.w1}</span>`;
+    if(data.w2) badges += `<span class="mini-badge w2">W2 · ${data.w2}</span>`;
+
+    html += `<div class="${cls}" data-date="${iso}" title="${iso}${hasData?` • ${data.w1+data.w2} petugas`:''}">
+      <div class="num">
+        <span>${d}</span>
+        ${isToday?'<span class="today-tag">Hari ini</span>':''}
+      </div>
+      <div class="badges">${badges}</div>
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+
+  // Klik tanggal
+  grid.querySelectorAll('.cal-day[data-date]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const iso = el.getAttribute('data-date');
+      $('filterDate').value = iso;
+      applyFilters(true);
+      // Scroll ke panel hasil
+      $('resultText').scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  });
+}
+
+function goToday(){
+  $('filterDate').value = TODAY_ISO;
+  applyFilters(true);
+  // Set kalender ke bulan hari ini
+  const d = new Date();
+  calYear = d.getFullYear();
+  calMonth = d.getMonth();
+  if($('calendar').classList.contains('show')) renderCalendar();
+  // Scroll ke baris hari ini
+  setTimeout(()=>{
+    const row = document.querySelector('tr.is-today');
+    if(row) row.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 200);
+}
+
+// ===== TABS =====
+function setView(view){
+  const isCal = view === 'calendar';
+  $('calendar').classList.toggle('show', isCal);
+  $('tabList').classList.toggle('active', !isCal);
+  $('tabCalendar').classList.toggle('active', isCal);
+  if(isCal) renderCalendar();
+}
+
+// ===== Data load =====
 function setStatus(type,text){
   $('status').className = 'status ' + type;
   $('statusText').textContent = text;
@@ -530,11 +695,37 @@ async function loadData(){
     allData = json.rows;
     filtered = [...allData];
     shown = PAGE_SIZE;
+
     fillDateFilter();
+
+    // 🔔 Otomatis filter ke hari ini kalau ada datanya
+    const hasToday = allData.some(r => r.date === TODAY_ISO);
+    if(hasToday){
+      $('filterDate').value = TODAY_ISO;
+    }
+
+    // Set kalender ke bulan hari ini (atau bulan data pertama)
+    const d = new Date();
+    calYear = d.getFullYear();
+    calMonth = d.getMonth();
+    if(!hasToday && allData.length && allData[0].date){
+      const fd = new Date(allData[0].date);
+      if(!isNaN(fd)){ calYear = fd.getFullYear(); calMonth = fd.getMonth(); }
+    }
+
     applyFilters(false);
+
     const upd = json.updatedAt ? new Date(json.updatedAt).toLocaleString('id-ID') : '-';
     $('footer').textContent = `Total di server: ${json.count ?? allData.length} • Terakhir diperbarui: ${upd}`;
     setStatus('online', `Terhubung • ${allData.length} data`);
+
+    // Scroll ke baris hari ini setelah render
+    if(hasToday){
+      setTimeout(()=>{
+        const row = document.querySelector('tr.is-today');
+        if(row) row.scrollIntoView({behavior:'smooth', block:'center'});
+      }, 300);
+    }
   }catch(err){
     console.error(err);
     setStatus('error','Gagal memuat data');
@@ -546,10 +737,31 @@ async function loadData(){
   }
 }
 
+// ===== Events =====
 $('search').addEventListener('input', ()=>applyFilters(true));
 $('filterShift').addEventListener('change', ()=>applyFilters(true));
 $('filterDate').addEventListener('change', ()=>applyFilters(true));
 $('refreshBtn').addEventListener('click', loadData);
+$('todayBtn').addEventListener('click', goToday);
+
+$('tabList').addEventListener('click', ()=>setView('list'));
+$('tabCalendar').addEventListener('click', ()=>setView('calendar'));
+
+$('calPrev').addEventListener('click', ()=>{
+  calMonth--;
+  if(calMonth < 0){ calMonth = 11; calYear--; }
+  renderCalendar();
+});
+$('calNext').addEventListener('click', ()=>{
+  calMonth++;
+  if(calMonth > 11){ calMonth = 0; calYear++; }
+  renderCalendar();
+});
+$('calToday').addEventListener('click', ()=>{
+  const d = new Date();
+  calYear = d.getFullYear(); calMonth = d.getMonth();
+  renderCalendar();
+});
 
 $('copyBtn').addEventListener('click', async ()=>{
   const ta = $('resultText');
@@ -569,9 +781,11 @@ $('clearBtn').addEventListener('click', ()=>{
   $('search').value='';
   $('filterShift').value='';
   $('filterDate').value='';
+  selectedDate = null;
   applyFilters(true);
 });
 
+// Init
 loadData();
 </script>
 </body>
