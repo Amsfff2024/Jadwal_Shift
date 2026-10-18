@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Jadwal Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#0a0e1a;
+    --bg-2:#0f172a;
+    --card:rgba(30,41,59,.65);
+    --card-solid:#1e293b;
+    --accent:#38bdf8;
+    --accent-2:#a855f7;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+    --border:rgba(148,163,184,.15);
+    --border-strong:rgba(148,163,184,.25);
+    --ok:#22c55e;
+    --bad:#ef4444;
+    --w1:#38bdf8;
+    --w2:#a855f7;
+    --shadow:0 8px 32px rgba(0,0,0,.4);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg-1);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(56,189,248,.12), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(168,85,247,.12), transparent 40%),
+      linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+    background-attachment:fixed;
+    color:var(--text);
+    min-height:100vh;
+    padding:24px;
+    line-height:1.5;
+  }
+  .container{max-width:1280px;margin:0 auto}
+
+  /* ===== HEADER ===== */
+  header{
+    display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:16px;margin-bottom:28px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--border);
+  }
+  h1{
+    font-size:1.75rem;font-weight:800;letter-spacing:-.02em;
+    display:flex;align-items:center;gap:10px;
+  }
+  h1 .emoji{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:44px;height:44px;border-radius:12px;
+    background:linear-gradient(135deg,rgba(56,189,248,.2),rgba(168,85,247,.2));
+    border:1px solid rgba(56,189,248,.3);
+    font-size:1.4rem;
+  }
+  h1 .gradient{
+    background:linear-gradient(135deg,#38bdf8 0%,#a855f7 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    color:transparent;
+  }
+  .status{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 14px;border-radius:999px;
+    background:rgba(30,41,59,.6);
+    border:1px solid var(--border);
+    font-size:.8rem;color:var(--muted);
+    backdrop-filter:blur(10px);
+    transition:.3s;
+  }
+  .status .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--muted);
+    transition:.3s;
+  }
+  .status.online{border-color:rgba(34,197,94,.3);color:#86efac}
+  .status.online .dot{
+    background:var(--ok);
+    box-shadow:0 0 0 0 rgba(34,197,94,.6);
+    animation:pulse 2s infinite;
+  }
+  .status.error{border-color:rgba(239,68,68,.3);color:#fca5a5}
+  .status.error .dot{background:var(--bad)}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}
+    70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}
+    100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+  }
+
+  /* ===== TOOLBAR ===== */
+  .toolbar{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr auto;
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .search-wrap,.select-wrap{position:relative;display:flex;align-items:center}
+  .search-wrap .icon,.select-wrap .icon{
+    position:absolute;left:14px;color:var(--muted);font-size:.95rem;pointer-events:none;
+    transition:.2s;
+  }
+  .toolbar input,.toolbar select{
+    width:100%;
+    background:var(--card);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:12px 16px 12px 42px;
+    border-radius:12px;
+    font-size:.9rem;
+    font-family:inherit;
+    outline:none;
+    backdrop-filter:blur(10px);
+    transition:.2s;
+    appearance:none;
+    cursor:pointer;
+  }
+  .toolbar input{cursor:text}
+  .toolbar input::placeholder{color:var(--muted)}
+  .toolbar input:focus,.toolbar select:focus{
+    border-color:var(--accent);
+    background:rgba(30,41,59,.9);
+    box-shadow:0 0 0 4px rgba(56,189,248,.1);
+  }
+  .toolbar input:focus + .icon,
+  .search-wrap:focus-within .icon{color:var(--accent)}
+  .select-wrap::after{
+    content:'▾';position:absolute;right:16px;color:var(--muted);
+    pointer-events:none;font-size:.75rem;
+  }
+  .toolbar button{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    background:linear-gradient(135deg,#38bdf8,#a855f7);
+    color:#0a0e1a;border:none;
+    padding:12px 20px;border-radius:12px;
+    font-weight:700;font-size:.88rem;
+    cursor:pointer;font-family:inherit;
+    box-shadow:0 4px 16px rgba(56,189,248,.3);
+    transition:.25s;
+    white-space:nowrap;
+  }
+  .toolbar button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 24px rgba(56,189,248,.5);
+  }
+  .toolbar button:active{transform:translateY(0)}
+  .toolbar button.loading{opacity:.6;pointer-events:none}
+  .toolbar button.loading .icon{animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ===== RESULT PANEL ===== */
+  .result-panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:24px;
+    backdrop-filter:blur(16px);
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  .result-panel::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--accent),var(--accent-2),transparent);
+  }
+  .result-panel h2{
+    font-size:1rem;font-weight:700;margin-bottom:16px;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  }
+  .result-panel h2 .label{display:flex;align-items:center;gap:8px}
+  .result-actions{display:flex;gap:8px}
+  .result-actions button{
+    display:inline-flex;align-items:center;gap:5px;
+    background:rgba(15,23,42,.6);color:var(--accent);
+    border:1px solid var(--border);
+    padding:7px 14px;border-radius:8px;
+    font-size:.8rem;cursor:pointer;font-weight:600;font-family:inherit;
+    transition:.2s;
+  }
+  .result-actions button:hover{
+    border-color:var(--accent);
+    background:rgba(56,189,248,.1);
+    transform:translateY(-1px);
+  }
+  .result-actions button.copied{
+    background:rgba(34,197,94,.15);color:#86efac;border-color:rgba(34,197,94,.4);
+  }
+
+  textarea#resultText{
+    width:100%;min-height:300px;
+    background:rgba(10,14,26,.8);
+    color:#cbd5e1;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px;
+    font-family:'JetBrains Mono','Consolas',monospace;
+    font-size:.82rem;
+    line-height:1.7;
+    resize:vertical;
+    outline:none;
+    transition:.2s;
+  }
+  textarea#resultText:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px rgba(56,189,248,.08);
+  }
+  textarea#resultText::placeholder{color:var(--muted);font-family:'Inter',sans-serif}
+
+  /* ===== COUNT INFO ===== */
+  .count-info{
+    font-size:.82rem;color:var(--muted);
+    margin-bottom:12px;padding:0 4px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .count-info::before{
+    content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
+    background:var(--accent);
+  }
+
+  /* ===== TABLE ===== */
+  .table-wrap{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    backdrop-filter:blur(16px);
+    box-shadow:var(--shadow);
+  }
+  table{width:100%;border-collapse:collapse;font-size:.88rem}
+  thead{
+    background:rgba(10,14,26,.7);
+    position:sticky;top:0;
+    backdrop-filter:blur(10px);
+  }
+  th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+  th{
+    font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;
+    color:var(--muted);font-weight:600;
+  }
+  tbody tr{transition:.15s}
+  tbody tr:hover{background:rgba(56,189,248,.05)}
+  tbody tr:last-child td{border-bottom:none}
+
+  .badge{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 12px;border-radius:999px;
+    font-size:.75rem;font-weight:600;
+    border:1px solid transparent;
+  }
+  .badge.w1{
+    background:rgba(56,189,248,.12);color:var(--w1);
+    border-color:rgba(56,189,248,.25);
+  }
+  .badge.w2{
+    background:rgba(168,85,247,.12);color:var(--w2);
+    border-color:rgba(168,85,247,.25);
+  }
+  .badge.default{
+    background:rgba(148,163,184,.1);color:var(--muted);
+    border-color:rgba(148,163,184,.2);
+  }
+
+  .empty,.loading{
+    padding:60px 20px;text-align:center;color:var(--muted);
+    font-size:.9rem;
+  }
+  .loading{
+    color:var(--accent);
+    display:flex;flex-direction:column;align-items:center;gap:14px;
+  }
+  .loading::before{
+    content:'';width:32px;height:32px;border-radius:50%;
+    border:3px solid rgba(56,189,248,.15);
+    border-top-color:var(--accent);
+    animation:spin 1s linear infinite;
+  }
+
+  .footer{
+    margin-top:20px;font-size:.75rem;color:var(--muted);
+    text-align:center;padding:12px;
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeInUp{
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  .result-panel,.table-wrap{animation:fadeInUp .5s ease-out}
+  .table-wrap{animation-delay:.1s;animation-fill-mode:both}
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width:900px){
+    .toolbar{grid-template-columns:1fr 1fr}
+    .toolbar button{grid-column:1/-1}
+  }
+  @media(max-width:640px){
+    body{padding:16px}
+    h1{font-size:1.4rem}
+    h1 .emoji{width:38px;height:38px;font-size:1.2rem}
+    th,td{padding:11px 12px;font-size:.8rem}
+    .hide-mobile{display:none}
+    .toolbar{grid-template-columns:1fr}
+    .result-panel{padding:16px}
+    textarea#resultText{min-height:220px;font-size:.75rem}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>
+      <span class="emoji">🗓️</span>
+      <span>Dashboard <span class="gradient">Jadwal Shift</span></span>
+    </h1>
+    <div class="status" id="status">
+      <span class="dot"></span>
+      <span id="statusText">Menghubungkan...</span>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="icon">🔍</span>
+      <input type="text" id="search" placeholder="Cari nama, ID, posisi, atau shift...">
+    </div>
+    <div class="select-wrap">
+      <span class="icon">⏰</span>
+      <select id="filterShift">
+        <option value="">Semua Shift</option>
+        <option value="W1">W1 (07:00 - 19:00)</option>
+        <option value="W2">W2 (19:00 - 07:00)</option>
+      </select>
+    </div>
+    <div class="select-wrap">
+      <span class="icon">📅</span>
+      <select id="filterDate">
+        <option value="">Semua Tanggal</option>
+      </select>
+    </div>
+    <button id="refreshBtn"><span class="icon">🔄</span> Muat Ulang</button>
+  </div>
+
+  <div class="result-panel">
+    <h2>
+      <span class="label">📋 Hasil Pencarian / Filter</span>
+      <span class="result-actions">
+        <button id="copyBtn">📋 Salin</button>
+        <button id="clearBtn">✖ Reset</button>
+      </span>
+    </h2>
+    <textarea id="resultText" readonly placeholder="Pilih tanggal atau ketik pencarian untuk melihat hasil..."></textarea>
+  </div>
+
+  <div class="count-info" id="countInfo"></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Tanggal</th>
+          <th>Nama</th>
+          <th>Shift</th>
+          <th class="hide-mobile">Jadwal</th>
+          <th class="hide-mobile">Posisi</th>
+          <th class="hide-mobile">ID</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="7" class="loading">Memuat data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer" id="footer"></div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyfVjpKKNOoB9uIUtkKX8LjvcMynpws5kCW4lyngQd2qXiZ2aeGrpjzGgjG_iMtR504/exec";
+
+let allData = [];
+let filtered = [];
+const $ = id => document.getElementById(id);
+const PAGE_SIZE = 100;
+let shown = PAGE_SIZE;
+
+function shiftClass(shift){
+  const s = (shift||'').toUpperCase();
+  if(s === 'W1') return 'w1';
+  if(s === 'W2') return 'w2';
+  return 'default';
+}
+
+function formatTanggal(label, iso){
+  if(label) return label;
+  if(!iso) return '-';
+  const d = new Date(iso);
+  return isNaN(d) ? iso : d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function cleanPosition(p){
+  if(!p) return '-';
+  return String(p).replace(/^\[|\]$/g,'').trim() || '-';
+}
+
+function renderResultText(){
+  const ta = $('resultText');
+  if(!filtered.length){ ta.value = ''; return; }
+
+  const byDate = {};
+  filtered.forEach(r=>{
+    const key = r.date || r.dateLabel || 'unknown';
+    if(!byDate[key]) byDate[key] = { label: r.dateLabel, rows: [] };
+    byDate[key].rows.push(r);
+  });
+
+  const lines = [];
+  const dateKeys = Object.keys(byDate).sort();
+
+  dateKeys.forEach((dk, di)=>{
+    const grp = byDate[dk];
+    lines.push(`📅 BO WL Standby : ${grp.label || dk}`);
+    lines.push('');
+
+    const byShift = {};
+    grp.rows.forEach(r=>{
+      const s = (r.shift||'Lainnya').toUpperCase();
+      if(!byShift[s]) byShift[s] = [];
+      byShift[s].push(r);
+    });
+
+    const shiftOrder = Object.keys(byShift).sort();
+    shiftOrder.forEach((sh, si)=>{
+      const first = byShift[sh][0];
+      lines.push(first.schedule || sh);
+      byShift[sh]
+        .sort((a,b)=>(a.name||'').localeCompare(b.name||''))
+        .forEach(r=>{
+          const contact = r.contact || '-';
+          const pos = cleanPosition(r.position);
+          const id = r.id || '-';
+          lines.push(`${r.name || '-'}-${contact}-[${pos}]-${id}`);
+        });
+      lines.push('────────────────────');
+      if(si < shiftOrder.length-1) lines.push('');
+    });
+    if(di < dateKeys.length-1) lines.push('');
+  });
+
+  ta.value = lines.join('\n');
+}
+
+function render(){
+  const tb = $('tableBody');
+  if(!filtered.length){
+    tb.innerHTML = '<tr><td colspan="7" class="empty">Tidak ada data yang cocok.</td></tr>';
+    $('countInfo').textContent = '';
+    return;
+  }
+  const slice = filtered.slice(0, shown);
+  tb.innerHTML = slice.map((r,i)=>{
+    const cls = shiftClass(r.shift);
+    return `<tr>
+      <td>${i+1}</td>
+      <td>${formatTanggal(r.dateLabel, r.date)}</td>
+      <td><strong>${r.name||'-'}</strong></td>
+      <td><span class="badge ${cls}">${r.shift||'-'}</span></td>
+      <td class="hide-mobile">${r.schedule||'-'}</td>
+      <td class="hide-mobile">${cleanPosition(r.position)}</td>
+      <td class="hide-mobile">${r.id||'-'}</td>
+    </tr>`;
+  }).join('');
+
+  $('countInfo').textContent =
+    `Menampilkan ${slice.length} dari ${filtered.length} jadwal` +
+    (filtered.length > shown ? ' — gunakan pencarian/filter untuk mempersempit.' : '');
+}
+
+function fillDateFilter(){
+  const map = {};
+  allData.forEach(r=>{ if(r.date) map[r.date] = r.dateLabel || r.date; });
+  const dates = Object.keys(map).sort();
+  $('filterDate').innerHTML = '<option value="">Semua Tanggal</option>' +
+    dates.map(d=>`<option value="${d}">${map[d]}</option>`).join('');
+}
+
+function applyFilters(resetPage=true){
+  if(resetPage) shown = PAGE_SIZE;
+  const q = $('search').value.toLowerCase().trim();
+  const fs = $('filterShift').value.toUpperCase();
+  const fd = $('filterDate').value;
+
+  filtered = allData.filter(r=>{
+    const matchQ = !q || [r.name,r.id,r.position,r.shift,r.schedule,r.dateLabel,r.contact]
+      .some(v=>(v||'').toString().toLowerCase().includes(q));
+    const matchS = !fs || (r.shift||'').toUpperCase() === fs;
+    const matchD = !fd || r.date === fd;
+    return matchQ && matchS && matchD;
+  });
+
+  render();
+  renderResultText();
+}
+
+function setStatus(type,text){
+  $('status').className = 'status ' + type;
+  $('statusText').textContent = text;
+}
+
+async function loadData(){
+  setStatus('', 'Memuat data...');
+  $('refreshBtn').classList.add('loading');
+  $('tableBody').innerHTML = '<tr><td colspan="7" class="loading">Mengambil data dari server...</td></tr>';
+  try{
+    const res = await fetch(API_URL + (API_URL.includes('?')?'&':'?') + 't=' + Date.now());
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if(!json || json.ok !== true || !Array.isArray(json.rows)){
+      throw new Error('Format respons tidak dikenali');
+    }
+    allData = json.rows;
+    filtered = [...allData];
+    shown = PAGE_SIZE;
+    fillDateFilter();
+    applyFilters(false);
+    const upd = json.updatedAt ? new Date(json.updatedAt).toLocaleString('id-ID') : '-';
+    $('footer').textContent = `Total di server: ${json.count ?? allData.length} • Terakhir diperbarui: ${upd}`;
+    setStatus('online', `Terhubung • ${allData.length} data`);
+  }catch(err){
+    console.error(err);
+    setStatus('error','Gagal memuat data');
+    $('tableBody').innerHTML = `<tr><td colspan="7" class="empty">
+      ⚠️ Gagal mengambil data.<br><small>${err.message}</small></td></tr>`;
+    $('footer').textContent = '';
+  }finally{
+    $('refreshBtn').classList.remove('loading');
+  }
+}
+
+$('search').addEventListener('input', ()=>applyFilters(true));
+$('filterShift').addEventListener('change', ()=>applyFilters(true));
+$('filterDate').addEventListener('change', ()=>applyFilters(true));
+$('refreshBtn').addEventListener('click', loadData);
+
+$('copyBtn').addEventListener('click', async ()=>{
+  const ta = $('resultText');
+  if(!ta.value) return;
+  try{
+    await navigator.clipboard.writeText(ta.value);
+    const btn = $('copyBtn');
+    btn.classList.add('copied');
+    btn.textContent = '✅ Tersalin!';
+    setTimeout(()=>{ btn.classList.remove('copied'); btn.textContent='📋 Salin'; }, 1500);
+  }catch(e){
+    ta.select(); document.execCommand('copy');
+  }
+});
+
+$('clearBtn').addEventListener('click', ()=>{
+  $('search').value='';
+  $('filterShift').value='';
+  $('filterDate').value='';
+  applyFilters(true);
+});
+
+loadData();
+</script>
+</body>
+</html>
